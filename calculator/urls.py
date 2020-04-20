@@ -18,13 +18,14 @@ from django.urls import path
 from django.conf.urls import url, include
 from django.contrib.auth.models import User
 from rest_framework import routers
-from operations.views import UserViewSet, OperationViewSet
+from operations.views import UserViewSet, OperationViewSet, HealthViewSet
 
 
 # Routers provide a way of automatically determining the URL conf.
 router = routers.DefaultRouter()
 router.register(r'users', UserViewSet)
 router.register(r'operations', OperationViewSet)
+router.register(r'health', HealthViewSet, basename='health')
 
 
 # Wire up our API using automatic URL routing.
