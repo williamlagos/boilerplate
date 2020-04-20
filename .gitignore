@@ -138,6 +138,7 @@ dmypy.json
 cython_debug/
 
 env
+staticfiles
 db.sqlite3
 .vscode
-staticfiles
+.DS_Store

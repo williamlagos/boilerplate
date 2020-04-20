@@ -17,6 +17,9 @@ from django.contrib import admin
 from django.urls import path
 from django.conf.urls import url, include
 from django.contrib.auth.models import User
+from django.conf import settings
+from django.conf.urls.static import static
+from django.views.generic import RedirectView
 from rest_framework import routers
 from operations.views import UserViewSet, OperationViewSet, HealthViewSet
 
@@ -32,9 +35,7 @@ router.register(r'health', HealthViewSet, basename='health')
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [
     url(r'^', include(router.urls)),
-    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
+    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    url(r'^favicon\.ico$',RedirectView.as_view(url='/static/favicon.ico')),
+    # path('admin/', admin.site.urls),
 ]
-
-# urlpatterns = [
-#     path('admin/', admin.site.urls),
-# ]
