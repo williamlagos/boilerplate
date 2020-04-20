@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
-import django_heroku
 
 if 'SENTRY_DSN' in os.environ:
     import sentry_sdk
@@ -139,4 +138,6 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-django_heroku.settings(locals())
+if 'INTEGRATION' not in os.environ:
+    import django_heroku
+    django_heroku.settings(locals())
