@@ -38,6 +38,7 @@ class OperationSerializer(serializers.HyperlinkedModelSerializer):
             'values': validated_data['values'],
             'result': result
         })
+        cache.persist(str(op.id))
         return op
     
     def to_representation(self, instance: Operation):
