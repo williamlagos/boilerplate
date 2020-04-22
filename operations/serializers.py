@@ -27,7 +27,7 @@ class OperationSerializer(serializers.HyperlinkedModelSerializer):
         )
         oper.save()
         cache.set(str(oper.id), {
-            'id': str(oper.id),
+            'id': oper.id,
             'username': self.context['request'].user.username,
             'operation': validated_data['operation_type'],
             'values': validated_data['values'],
