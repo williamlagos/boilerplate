@@ -31,7 +31,13 @@ class OperationSerializer(serializers.HyperlinkedModelSerializer):
             result=result
         )
         op.save()
-        # cache.set(op.id, op)
+        cache.set(str(op.id), {
+            'id': str(op.id),
+            'username': self.context['request'].user.username,
+            'operation': validated_data['operation_type'],
+            'values': validated_data['values'],
+            'result': result
+        })
         return op
     
     def to_representation(self, instance: Operation):
