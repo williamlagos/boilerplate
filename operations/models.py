@@ -3,10 +3,12 @@ from django.contrib.auth.models import User
 from django.core.validators import int_list_validator
 from django.utils.translation import gettext_lazy as _
 
-
-# Create your models here.
+# Calculator operations models for django database persistence layer
 
 class Operation(models.Model):
+    # Operation model, for storing multiple operands (in a list), 
+    # operation type (sum, multiplication, subtraction or division),
+    # result and user related to this calculation.
     class OperationType(models.TextChoices):
         SUM = 'sum', _('Sum')
         MUL = 'mul', _('Multiplication')

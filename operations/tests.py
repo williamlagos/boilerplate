@@ -5,10 +5,12 @@ from rest_framework.test import APIClient
 from .utils import calculate
 from .models import Operation
 
-# Create your tests here.
+# Tests created for different application levels
 
 class OperationsTestCase(TestCase):
+    # Main Operations Test Case Class
     def setUp(self):
+        # Preparing API client, first operation register and login
         self.c = APIClient()
         values = [8.0, 8.0]
         operation_type = 'sum'
@@ -22,23 +24,28 @@ class OperationsTestCase(TestCase):
         self.c.login(username='test', password='secret')
 
     def test_database_integrity(self):
+        # Checking first registries on database
         user = User.objects.filter(username="test")
         self.assertEqual(user.exists(), True)
         self.assertEqual(Operation.objects.filter(username=user[0], id=1).exists(), True)
     
     def test_simple_calculations(self):
+        # Checking simple calculations with just the function
         self.assertEqual(calculate("sum", [27.5, 10.0]), 37.5)
         self.assertEqual(calculate("sub", [98.5, 18.5]), 80.0)
         self.assertEqual(calculate("mul", [20.0, 10.0]), 200.0)
         self.assertEqual(calculate("div", [40.0, 10.0]), 4.0)
     
     def test_complex_calculations(self):
+        # Checking complex calculations with just the function
         self.assertEqual(calculate("sum", [23.59, 68.47]), 92.06)
         self.assertEqual(calculate("sub", [75.00, 10.00, 2.00]), 63.00)
         self.assertEqual(calculate("mul", [28.37, 10.50, 3.00]), 893.655)
         self.assertEqual(calculate("div", [320.00, 64.00, 5.00]), 1.00)
     
     def test_calc_request(self):
+        # Executing multiple requests for different operations, such as
+        # sum, subtraction, multiplication, and division
         res1 = self.c.post('/operations/', {
             'values': [8.0, 8.0], 
             'operation_type': 'sum'
@@ -51,7 +58,7 @@ class OperationsTestCase(TestCase):
             'values': [8.0, 8.0],
             'result': 16.0
         })
-        # def test_sub_request(self):
+        # Subtraction request
         res2 = self.c.post('/operations/', {
             'values': [24.0, 9.0],
             'operation_type': 'sub'
@@ -64,7 +71,7 @@ class OperationsTestCase(TestCase):
             'values': [24.0, 9.0],
             'result': 15.0
         })
-        # def test_mul_request(self):
+        # Multiplication request
         res3 = self.c.post('/operations/', {
             'values': [2.0, 12.0],
             'operation_type': 'mul'
@@ -77,7 +84,7 @@ class OperationsTestCase(TestCase):
             'values': [2.0, 12.0],
             'result': 24.0
         })
-        # def test_div_request(self):
+        # Division request
         res4 = self.c.post('/operations/', {
             'values': [36.0, 2.0],
             'operation_type': 'div'
@@ -91,6 +98,7 @@ class OperationsTestCase(TestCase):
             'result': 18.0
         })
     def test_cache(self):
+        # Checking write and read on cache
         cache.set('A', {
             'id': 1,
             'username': 'http://testserver/users/{}/' . format(self.u.pk),
@@ -107,10 +115,12 @@ class OperationsTestCase(TestCase):
         })
 
     def tearDown(self):
+        # Delete information from main cache and logotu
         cache.delete('A')
         self.c.logout()
 
 class HealthTestCase(TestCase):
+    # Simple test case for health check
     def setUp(self):
         self.c = APIClient()
 
