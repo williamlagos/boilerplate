@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User, Group
-from rest_framework import serializers
+from rest_framework import serializers, fields
 from .models import Operation
 from functools import reduce
 from operator import add, sub, mul, truediv
@@ -14,16 +14,24 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 class OperationSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Operation
-        fields = ['username', 'values', 'operation_type', 'result']
-        read_only_fields = ['username', 'result']
+        fields = ['id', 'username', 'values', 'operation_type', 'result']
+        read_only_fields = ['id', 'username', 'result']
+    
+    values = serializers.ListField(child=serializers.FloatField())
+
     def create(self, validated_data):
         optype = validated_data['operation_type']
         operators = { 'SM': add, 'MU': sub, 'SB': mul, 'DV': truediv }
-        values = [float(x) for x in validated_data['values'].split(',')]
-        result = reduce(operators[optype], values)
-        return Operation(
+        result = reduce(operators[optype], validated_data['values'])
+        op = Operation(
             username=self.context['request'].user,
             operation_type=validated_data['operation_type'],
-            values=validated_data['values'],
+            values=','.join(str(i) for i in validated_data['values']),
             result=result
         )
+        op.save()
+        return op
+    
+    def to_representation(self, instance: Operation):
+        instance.values = [float(i) for i in instance.values.split(',')]
+        return super(OperationSerializer, self).to_representation(instance)
