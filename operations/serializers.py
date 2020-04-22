@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User, Group
+from django.core.cache import cache
 from rest_framework import serializers, fields
 from .models import Operation
 from functools import reduce
@@ -30,6 +31,7 @@ class OperationSerializer(serializers.HyperlinkedModelSerializer):
             result=result
         )
         op.save()
+        # cache.set(op.id, op)
         return op
     
     def to_representation(self, instance: Operation):
