@@ -16,7 +16,7 @@ class Operation(models.Model):
     username = models.ForeignKey(User, on_delete=models.CASCADE)
     values = models.TextField(validators=[int_list_validator])
     operation_type = models.CharField(
-        max_length=2,
+        max_length=3,
         choices=OperationType.choices,
         default=OperationType.SUM
     )
