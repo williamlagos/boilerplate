@@ -8,10 +8,10 @@ from django.utils.translation import gettext_lazy as _
 
 class Operation(models.Model):
     class OperationType(models.TextChoices):
-        SUM = 'SM', _('Sum')
-        MUL = 'MU', _('Multiplication')
-        SUB = 'SB', _('Subtraction')
-        DIV = 'DV', _('Division')
+        SUM = 'sum', _('Sum')
+        MUL = 'mul', _('Multiplication')
+        SUB = 'sub', _('Subtraction')
+        DIV = 'div', _('Division')
     
     username = models.ForeignKey(User, on_delete=models.CASCADE)
     values = models.TextField(validators=[int_list_validator])

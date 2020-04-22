@@ -22,7 +22,7 @@ class OperationSerializer(serializers.HyperlinkedModelSerializer):
 
     def create(self, validated_data):
         optype = validated_data['operation_type']
-        operators = { 'SM': add, 'MU': sub, 'SB': mul, 'DV': truediv }
+        operators = { 'sum': add, 'sub': sub, 'mul': mul, 'div': truediv }
         result = reduce(operators[optype], validated_data['values'])
         op = Operation(
             username=self.context['request'].user,
