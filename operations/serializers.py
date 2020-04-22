@@ -2,9 +2,7 @@ from django.contrib.auth.models import User, Group
 from django.core.cache import cache
 from rest_framework import serializers, fields
 from .models import Operation
-from functools import reduce
-from operator import add, sub, mul, truediv
-
+from .utils import calculate
 
 # Serializers define the API representation.
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -21,25 +19,22 @@ class OperationSerializer(serializers.HyperlinkedModelSerializer):
     values = serializers.ListField(child=serializers.FloatField())
 
     def create(self, validated_data):
-        optype = validated_data['operation_type']
-        operators = { 'sum': add, 'sub': sub, 'mul': mul, 'div': truediv }
-        result = reduce(operators[optype], validated_data['values'])
-        op = Operation(
+        oper = Operation(
             username=self.context['request'].user,
             operation_type=validated_data['operation_type'],
             values=','.join(str(i) for i in validated_data['values']),
-            result=result
+            result=calculate(validated_data['operation_type'], validated_data['values'])
         )
-        op.save()
-        cache.set(str(op.id), {
-            'id': str(op.id),
+        oper.save()
+        cache.set(str(oper.id), {
+            'id': str(oper.id),
             'username': self.context['request'].user.username,
             'operation': validated_data['operation_type'],
             'values': validated_data['values'],
-            'result': result
+            'result': oper.result
         })
-        cache.persist(str(op.id))
-        return op
+        cache.persist(str(oper.id))
+        return oper
     
     def to_representation(self, instance: Operation):
         instance.values = [float(i) for i in instance.values.split(',')]
