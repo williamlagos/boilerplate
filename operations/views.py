@@ -12,18 +12,36 @@ from .serializers import UserSerializer, OperationSerializer
 # ViewSets defining the view behavior for models and endpoints.
 
 class UserViewSet(viewsets.ModelViewSet):
-    # ViewSet based on model and respective serializer
+    """ 
+    User handling API endpoint 
+    list: List registered users
+    retrieve: Get one user based on ID
+    update: Update specific user based on ID
+    create: Create one user with specified information
+    partial_update: Update partially an existent user
+    destroy: Delete one specific user
+    """
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
 class OperationViewSet(viewsets.ModelViewSet):
-    # ViewSet based on custom model and respective custom serializer
+    """ 
+    Calculator operations handling API endpoint 
+    list: List calculated operations
+    retrieve: Get one specific operation by ID
+    update: Update specific operation based on ID
+    create: Make a new operation with multiple operands
+    partial_update: Update partially an existent operation
+    destroy: Delete one specific operation
+    """
     queryset = Operation.objects.all()
     serializer_class = OperationSerializer
 
 class HealthViewSet(viewsets.ViewSet):
-    # ViewSet created for check system health by trying to connect
-    # on database and cache, then catching exceptions when one goes down.
+    """ 
+    ViewSet created for check system health by trying to connect
+    on database and cache, then catching exceptions when one goes down.
+    """
     permission_classes = (AllowAny, )
     def list(self, request, format=None):
         log = getLogger()
